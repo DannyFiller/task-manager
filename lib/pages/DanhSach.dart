@@ -69,11 +69,11 @@ Widget item(BuildContext context, int index) {
             borderRadius: BorderRadius.circular(10)),
         child: ListTile(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return const ChiTiet();
-              },
-            ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChiTiet(),
+                ));
           },
           title: Text(value.danhsach[index].tieuDeCongViec.toString()),
           subtitle: Text(value.danhsach[index].noiDung.toString()),
