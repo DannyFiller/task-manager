@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/pages/ChiTiet.dart';
 import 'package:task_manager/pages/themcongviec.dart';
+import 'package:provider/provider.dart';
+import 'package:task_manager/providers/ListVSM.dart';
 
 class DanhSach extends StatefulWidget {
   const DanhSach({super.key});
@@ -16,6 +18,7 @@ class _DanhSachState extends State<DanhSach> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         // automaticallyImplyLeading: false,
         title: const Text("Danh sách công việc"),
         centerTitle: true,
@@ -23,10 +26,14 @@ class _DanhSachState extends State<DanhSach> {
       body: Center(
         child: Stack(
           children: [
-            ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return item(context);
+            Consumer<ListVSM>(
+              builder: (context, value, child) {
+                return ListView.builder(
+                  itemCount: value.danhsach.length,
+                  itemBuilder: (context, index) {
+                    return item(context, index);
+                  },
+                );
               },
             ),
             Positioned(
@@ -52,41 +59,45 @@ class _DanhSachState extends State<DanhSach> {
   }
 }
 
-Widget item(BuildContext context) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(10)),
-    child: ListTile(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const ChiTiet();
+Widget item(BuildContext context, int index) {
+  return Consumer<ListVSM>(
+    builder: (BuildContext context, ListVSM value, Widget? child) {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(10)),
+        child: ListTile(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return const ChiTiet();
+              },
+            ));
           },
-        ));
-      },
-      title: const Text("Công việc"),
-      subtitle: const Text("Mô tả công việc"),
-      leading: const Icon(Icons.work),
-      trailing: Wrap(
-        spacing: 12,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              ShowDialog(context);
-            },
-            child: Icon(Icons.edit),
+          title: Text(value.danhsach[index].tieuDeCongViec.toString()),
+          subtitle: Text(value.danhsach[index].noiDung.toString()),
+          leading: const Icon(Icons.work),
+          trailing: Wrap(
+            spacing: 12,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  ShowDialog(context);
+                },
+                child: Icon(Icons.edit),
+              ),
+              GestureDetector(
+                onTap: () {
+                  value.xoaCongViec(index);
+                },
+                child: Icon(Icons.delete),
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              ShowDialog(context);
-            },
-            child: Icon(Icons.delete),
-          ),
-        ],
-      ),
-    ),
+        ),
+      );
+    },
   );
 }
 

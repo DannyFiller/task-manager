@@ -1,12 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/const.dart';
-import 'package:task_manager/trangchu.dart';
+import 'package:task_manager/utilities/authService.dart';
+import 'package:task_manager/utilities/const.dart';
 
-class DangNhap extends StatelessWidget {
+class DangNhap extends StatefulWidget {
   const DangNhap({super.key});
 
   @override
+  State<DangNhap> createState() => _DangNhapState();
+}
+
+class _DangNhapState extends State<DangNhap> {
+  DateTime? _selectedDate;
+
+  // Hàm để hiển thị DatePicker
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // Ngày mặc định là hôm nay
+      firstDate: DateTime(2000), // Ngày bắt đầu có thể chọn
+      lastDate: DateTime(2101), // Ngày kết thúc có thể chọn
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Authservice authservice = Authservice();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController matKhauController = TextEditingController();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -39,8 +64,9 @@ class DangNhap extends StatelessWidget {
                         color: const Color.fromARGB(255, 124, 121, 121)),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       prefixIconColor: Colors.amber,
                       prefixIcon: Icon(Icons.person),
                       hintText: "Tên tài khoản",
@@ -58,8 +84,10 @@ class DangNhap extends StatelessWidget {
                         color: const Color.fromARGB(255, 124, 121, 121)),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextField(
+                    obscureText: true,
+                    controller: matKhauController,
+                    decoration: const InputDecoration(
                       prefixIconColor: Colors.amber,
                       prefixIcon: Icon(Icons.password),
                       hintText: "Mật Khẩu",
@@ -75,11 +103,10 @@ class DangNhap extends StatelessWidget {
                       backgroundColor: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TrangChu(),
-                          ));
+                      authservice.SignIn(
+                          email: emailController.text,
+                          password: matKhauController.text,
+                          context: context);
                     },
                     child: const Text(
                       "Đăng Nhập",

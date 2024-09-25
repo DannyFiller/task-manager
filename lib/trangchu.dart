@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/pages/Lich.dart';
-import 'package:task_manager/pages/CaiDat.dart';
+import 'package:task_manager/pages/lich.dart';
+import 'package:task_manager/pages/caiDat.dart';
 import 'package:task_manager/pages/DanhSach.dart';
 
 class TrangChu extends StatefulWidget {

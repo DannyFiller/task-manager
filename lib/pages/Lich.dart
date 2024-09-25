@@ -21,6 +21,7 @@ class _LichState extends State<Lich> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         automaticallyImplyLeading: false,
         title: const Text("Lịch Công Việc"),
         centerTitle: true,
@@ -43,10 +44,17 @@ class _LichState extends State<Lich> {
             onDaySelected: _onDaySelected,
           ),
           Text(today.toString()),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: 2,
-            itemBuilder: (context, index) => item(context, today),
+          const Divider(),
+          const Text(
+            "Danh sách công việc",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 6,
+              itemBuilder: (context, index) => item(context, today),
+            ),
           ),
         ]),
       ),
@@ -56,7 +64,7 @@ class _LichState extends State<Lich> {
 
 Widget item(BuildContext context, DateTime date) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
     decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(10)),
@@ -71,23 +79,6 @@ Widget item(BuildContext context, DateTime date) {
       title: const Text("Công việc"),
       subtitle: Text("Mô tả công việc " + date.toString()),
       leading: const Icon(Icons.work),
-      //   trailing: Wrap(
-      //     spacing: 12,
-      //     children: <Widget>[
-      //       GestureDetector(
-      //         onTap: () {
-      //           ShowDialog(context);
-      //         },
-      //         child: Icon(Icons.edit),
-      //       ),
-      //       GestureDetector(
-      //         onTap: () {
-      //           ShowDialog(context);
-      //         },
-      //         child: Icon(Icons.delete),
-      //       ),
-      //     ],
-      //   ),
     ),
   );
 }
