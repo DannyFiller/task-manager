@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_manager/models/congViec.dart';
 import 'package:task_manager/pages/chitiet.dart';
-import 'package:provider/provider.dart';
 import 'package:task_manager/providers/ListVSM.dart';
+import 'package:task_manager/services/databaseService.dart';
 
 class Lich extends StatefulWidget {
   const Lich({super.key});
@@ -13,11 +14,26 @@ class Lich extends StatefulWidget {
 }
 
 class _LichState extends State<Lich> {
+  List<Congviec> lstCongViec = [];
+  late Future<List<Congviec>> congViec;
+
   DateTime today = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusDay) {
     setState(() {
       today = day;
     });
+  }
+
+  Future<List<Congviec>> _loadProData() async {
+    lstCongViec = await DatabaseService.instance.readAllCongviec();
+    return lstCongViec;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    congViec = _loadProData();
   }
 
   @override
@@ -31,7 +47,7 @@ class _LichState extends State<Lich> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(children: [
             TableCalendar(
               locale: "vi",
@@ -39,7 +55,6 @@ class _LichState extends State<Lich> {
               firstDay: DateTime.utc(today.year - 10, today.month),
               lastDay: DateTime.utc(today.year + 10, today.month),
               pageAnimationEnabled: false,
-              // currentDay: DateTime.utc(today.year, today.month, today.day),
               availableGestures: AvailableGestures.all,
               selectedDayPredicate: (day) => isSameDay(day, today),
               headerStyle: const HeaderStyle(
@@ -53,18 +68,19 @@ class _LichState extends State<Lich> {
               "Danh sách công việc",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            Consumer<ListVSM>(
-              builder: (BuildContext context, ListVSM value, Widget? child) {
+            FutureBuilder(
+              future: congViec,
+              builder: (context, snapshot) {
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: value.danhsach.length,
+                    itemCount: lstCongViec.length,
                     itemBuilder: (context, index) =>
-                        item(context, index, today),
+                        item(context, index, today, lstCongViec),
                   ),
                 );
               },
-            ),
+            )
           ]),
         ),
       ),
@@ -72,11 +88,11 @@ class _LichState extends State<Lich> {
   }
 }
 
-Widget item(BuildContext context, int index, DateTime today) {
+Widget item(
+    BuildContext context, int index, DateTime today, List<Congviec> lst) {
   return Consumer<ListVSM>(
     builder: (context, value, child) {
-      bool kiemTraCungNgay =
-          isSameDay(today, value.danhsach[index].ngayLamViec!);
+      bool kiemTraCungNgay = isSameDay(today, lst[index].ngayLamViec!);
       return kiemTraCungNgay
           ? Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -87,110 +103,29 @@ Widget item(BuildContext context, int index, DateTime today) {
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return const ChiTiet();
+                      return ChiTiet(
+                        index: index,
+                        congviec: lst[index],
+                      );
                     },
                   ));
                 },
-                title: Text(value.danhsach[index].ngayLamViec.toString()),
-                subtitle: Text(value.danhsach[index].noiDung.toString()),
+                title: Text(
+                  lst[index].tieuDeCongViec.toString(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  lst[index].noiDung.toString(),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 leading: const Icon(Icons.work),
               ),
             )
-          : SizedBox();
+          : const SizedBox();
     },
   );
 }
-
-// void get(BuildContext context, DateTime today) {
-//   List<Congviec> lst = Provider.of<ListVSM>(context, listen: false)
-//       .danhsach
-//       .where((congviec) => congviec.ngayLamViec == today)
-//       .cast<Congviec>()
-//       .toList();
-//   ;
-// }
-
-// Widget check(DateTime today) {
-//   return Consumer<ListVSM>(
-//     builder: (context, value, child) {
-//       return today.isAtSameMomentAs(value.danhsach[1].ngayLamViec!)
-//           ? Text("!= | ${today} | ${value.danhsach[1].ngayLamViec}")
-//           : Text("==");
-//     },
-//   );
-// }
-
-// Consumer<ListVSM>(
-//     builder: (context, value, child) {
-//       return today == value.danhsach[index].ngayLamViec
-//           ? Container(
-//               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-//               decoration: BoxDecoration(
-//                   border: Border.all(color: Colors.black),
-//                   borderRadius: BorderRadius.circular(10)),
-//               child: ListTile(
-//                 onTap: () {
-//                   Navigator.push(context, MaterialPageRoute(
-//                     builder: (context) {
-//                       return const ChiTiet();
-//                     },
-//                   ));
-//                 },
-//                 title: Text(value.danhsach[index].ngayLamViec.toString()),
-//                 subtitle: Text(value.danhsach[index].noiDung.toString()),
-//                 leading: const Icon(Icons.work),
-//               ),
-//             )
-//           : SizedBox();
-//     },
-//   );
-
-//  Consumer<ListVSM>(
-//     builder: (context, value, child) {
-//       return Container(
-//         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-//         decoration: BoxDecoration(
-//             border: Border.all(color: Colors.black),
-//             borderRadius: BorderRadius.circular(10)),
-//         child: ListTile(
-//           onTap: () {
-//             Navigator.push(context, MaterialPageRoute(
-//               builder: (context) {
-//                 return const ChiTiet();
-//               },
-//             ));
-//           },
-//           title: Text(value.danhsach[index].ngayLamViec.toString()),
-//           subtitle: Text(value.danhsach[index].noiDung.toString()),
-//           leading: const Icon(Icons.work),
-//         ),
-//       );
-//     },
-//   );
-
-// return Consumer<ListVSM>(
-//     builder: (context, value, child) {
-//       bool kiemTraCungNgay =
-//           isSameDay(today, value.danhsach[index].ngayLamViec!);
-//       return kiemTraCungNgay
-//           ? Container(
-//               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-//               decoration: BoxDecoration(
-//                   border: Border.all(color: Colors.black),
-//                   borderRadius: BorderRadius.circular(10)),
-//               child: ListTile(
-//                 onTap: () {
-//                   Navigator.push(context, MaterialPageRoute(
-//                     builder: (context) {
-//                       return const ChiTiet();
-//                     },
-//                   ));
-//                 },
-//                 title: Text(value.danhsach[index].ngayLamViec.toString()),
-//                 subtitle: Text(value.danhsach[index].noiDung.toString()),
-//                 leading: const Icon(Icons.work),
-//               ),
-//             )
-//           : SizedBox();
-//     },
-//   );

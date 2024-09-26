@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:task_manager/models/CongViec.dart';
+import 'package:task_manager/models/congViec.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/providers/ListVSM.dart';
+import 'package:task_manager/services/databaseService.dart';
+import 'package:task_manager/trangchu.dart';
 
 class ThemCongViec extends StatefulWidget {
   const ThemCongViec({super.key});
@@ -36,8 +38,7 @@ class _ThemCongViecState extends State<ThemCongViec> {
         if (value != null) {
           setState(() {
             _timeOfDay = value;
-            _thoiGianController.text =
-                _timeOfDay.format(context); // Cập nhật thời gian vào TextField
+            _thoiGianController.text = _timeOfDay.format(context);
           });
         }
       });
@@ -59,18 +60,24 @@ class _ThemCongViecState extends State<ThemCongViec> {
     }
   }
 
-  void _themCongViec() {
+  Future<void> _themCongViec() async {
     Congviec congviec = Congviec(
         tieuDeCongViec: _tieuDeController.text,
         noiDung: _noiDungController.text,
         ngayLamViec: DateFormat('dd-MM-yyyy').parse(_ngaylamController.text),
         thoiGianLamViec: _timeOfDay,
         diaDiem: _diaDiemController.text,
-        ghiChu: _ghiChuController.text);
+        ghiChu: _ghiChuController.text,
+        trangThai: false);
     Provider.of<ListVSM>(context, listen: false).themCongViec(congviec);
     Provider.of<ListVSM>(context, listen: false).check();
-    logger.i("${congviec.tieuDeCongViec}");
-    Navigator.pop(context);
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TrangChu(),
+        ));
+
     // logger.i("${congviec.NgayLamViec} | ${congviec.ThoiGianLamViec}");
   }
 
@@ -88,7 +95,6 @@ class _ThemCongViecState extends State<ThemCongViec> {
           child: Center(
             child: Column(
               children: [
-                Text(_timeOfDay.toString()),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: TextFormField(

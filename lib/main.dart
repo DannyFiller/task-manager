@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/pages/DangNhap.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:task_manager/providers/ListVSM.dart';
+import 'package:task_manager/trangchu.dart';
 import 'package:task_manager/utilities/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: DangNhap(),
+          body: TrangChu(),
         ),
       ),
     );

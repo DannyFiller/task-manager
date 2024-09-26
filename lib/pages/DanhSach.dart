@@ -1,10 +1,14 @@
 // ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:task_manager/models/congViec.dart';
 import 'package:task_manager/pages/ChiTiet.dart';
 import 'package:task_manager/pages/themcongviec.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/providers/ListVSM.dart';
+import 'package:task_manager/services/databaseService.dart';
+import 'package:logger/logger.dart';
+import 'package:task_manager/trangchu.dart';
 
 class DanhSach extends StatefulWidget {
   const DanhSach({super.key});
@@ -14,6 +18,24 @@ class DanhSach extends StatefulWidget {
 }
 
 class _DanhSachState extends State<DanhSach> {
+  List<Congviec> lstCongViec = [];
+  var logger = Logger();
+
+  late Future<List<Congviec>> congViec;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      congViec = _loadProData();
+    });
+  }
+
+  Future<List<Congviec>> _loadProData() async {
+    lstCongViec = await DatabaseService.instance.readAllCongviec();
+    return lstCongViec;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,47 +45,46 @@ class _DanhSachState extends State<DanhSach> {
         title: const Text("Danh sách công việc"),
         centerTitle: true,
       ),
-      body: Center(
-        child: Stack(
-          children: [
-            Consumer<ListVSM>(
-              builder: (context, value, child) {
-                return ListView.builder(
-                  itemCount: value.danhsach.length,
-                  itemBuilder: (context, index) {
-                    return item(context, index);
-                  },
-                );
+      body: FutureBuilder<List<Congviec>>(
+        future: congViec,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Lỗi: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Không có công việc nào.'));
+          } else {
+            // Cập nhật lstCongViec khi dữ liệu được trả về
+            lstCongViec = snapshot.data!;
+            return ListView.builder(
+              itemCount: lstCongViec.length,
+              itemBuilder: (context, index) {
+                return item(context, index, lstCongViec);
               },
-            ),
-            Positioned(
-                bottom: 8,
-                right: 8,
-                child: Container(
-                  width: 80,
-                  height: 50,
-                  child: FilledButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ThemCongViec(),
-                            ));
-                      },
-                      child: const Icon(Icons.add)),
-                ))
-          ],
-        ),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ThemCongViec(),
+              ));
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-Widget item(BuildContext context, int index) {
+Widget item(BuildContext context, int index, List<Congviec> lst) {
   return Consumer<ListVSM>(
     builder: (BuildContext context, ListVSM value, Widget? child) {
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black),
             borderRadius: BorderRadius.circular(10)),
@@ -72,26 +93,48 @@ Widget item(BuildContext context, int index) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChiTiet(),
+                  builder: (context) => ChiTiet(
+                    index: index,
+                    congviec: lst[index],
+                  ),
                 ));
           },
-          title: Text(value.danhsach[index].tieuDeCongViec.toString()),
-          subtitle: Text(value.danhsach[index].noiDung.toString()),
+          title: Text(
+            lst[index].tieuDeCongViec.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            lst[index].noiDung.toString(),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
           leading: const Icon(Icons.work),
           trailing: Wrap(
-            spacing: 12,
+            spacing: 6,
             children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  ShowDialog(context);
-                },
-                child: Icon(Icons.edit),
-              ),
-              GestureDetector(
-                onTap: () {
-                  value.xoaCongViec(index);
-                },
-                child: Icon(Icons.delete),
+              // Checkbox(
+              //   value: lst[index].trangThai,
+              //   onChanged: (bool? newValue) {
+              //     if (newValue != null) {
+              //       lst[index].trangThai = newValue;
+              //       value.notifyListeners();
+              //     }
+              //   },
+              // ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    value.xoaCongViec(lst[index].tieuDeCongViec!);
+                    ShowDialog(context);
+                  },
+                  child: const Icon(
+                    Icons.delete,
+                    size: 32,
+                  ),
+                ),
               ),
             ],
           ),
@@ -107,22 +150,26 @@ void ShowDialog(BuildContext context) {
     builder: (context) {
       return Dialog(
         child: SizedBox(
-          height: 300,
+          height: 200,
           width: MediaQuery.of(context).size.height * 0.5,
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("data")],
+            children: [
+              const Text("Đã Xóa"),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TrangChu(),
+                      ));
+                },
+                child: const Text("Trở lại"),
+              ),
+            ],
           ),
         ),
       );
     },
   );
-}
-
-PageChiTiet(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(
-    builder: (context) {
-      return const ChiTiet();
-    },
-  ));
 }
