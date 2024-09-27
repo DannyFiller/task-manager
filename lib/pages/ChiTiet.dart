@@ -73,6 +73,7 @@ class _ChiTietState extends State<ChiTiet> {
 
   void capNhat() {
     Congviec congviec = Congviec(
+      id: widget.congviec.id,
       tieuDeCongViec: _tieuDeController.text,
       noiDung: _noiDungController.text,
       ngayLamViec: DateFormat('dd-MM-yyyy').parse(_ngayLamController.text),

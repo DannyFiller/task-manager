@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Congviec {
+  int? id;
   String? tieuDeCongViec;
   String? noiDung;
   DateTime? ngayLamViec;
@@ -9,8 +10,17 @@ class Congviec {
   String? ghiChu;
   bool? trangThai;
 
+  // Congviec(
+  //     {this.tieuDeCongViec,
+  //     this.noiDung,
+  //     this.ngayLamViec,
+  //     this.thoiGianLamViec,
+  //     this.diaDiem,
+  //     this.ghiChu,
+  //     this.trangThai});
   Congviec(
-      {this.tieuDeCongViec,
+      {this.id,
+      this.tieuDeCongViec,
       this.noiDung,
       this.ngayLamViec,
       this.thoiGianLamViec,
@@ -42,8 +52,8 @@ class Congviec {
     this.ghiChu = ghiChu;
   }
 
-  // Chuyển từ Map (SQLite) thành đối tượng Congviec
   factory Congviec.fromMap(Map<String, dynamic> json) => Congviec(
+        id: json['id'],
         tieuDeCongViec: json['tieuDeCongViec'],
         noiDung: json['noiDung'],
         ngayLamViec: DateTime.parse(json['ngayLamViec']),
@@ -55,7 +65,6 @@ class Congviec {
         trangThai: json['trangThai'] == 1 ? true : false,
       );
 
-  // Chuyển từ đối tượng Congviec thành Map để lưu vào SQLite
   Map<String, dynamic> toMap() {
     return {
       'tieuDeCongViec': tieuDeCongViec,
@@ -65,7 +74,7 @@ class Congviec {
           '${thoiGianLamViec!.hour}:${thoiGianLamViec!.minute}', // Lưu thành chuỗi
       'diaDiem': diaDiem,
       'ghiChu': ghiChu,
-      'trangThai': trangThai == true ? 1 : 0, // Lưu dưới dạng int (1/0)
+      'trangThai': trangThai == true ? 1 : 0, // Lưu dưới dạng int
     };
   }
 }

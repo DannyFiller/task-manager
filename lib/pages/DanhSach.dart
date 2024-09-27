@@ -55,7 +55,6 @@ class _DanhSachState extends State<DanhSach> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('Không có công việc nào.'));
           } else {
-            // Cập nhật lstCongViec khi dữ liệu được trả về
             lstCongViec = snapshot.data!;
             return ListView.builder(
               itemCount: lstCongViec.length,
@@ -127,7 +126,7 @@ Widget item(BuildContext context, int index, List<Congviec> lst) {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: GestureDetector(
                   onTap: () {
-                    value.xoaCongViec(lst[index].tieuDeCongViec!);
+                    value.xoaCongViec(lst[index].id!);
                     ShowDialog(context);
                   },
                   child: const Icon(

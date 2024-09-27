@@ -20,8 +20,8 @@ class ListVSM with ChangeNotifier {
     notifyListeners();
   }
 
-  Future xoaCongViec(String tenCongViec) async {
-    await DatabaseService.instance.delete(tenCongViec);
+  Future xoaCongViec(int id) async {
+    await DatabaseService.instance.delete(id);
     notifyListeners();
   }
 

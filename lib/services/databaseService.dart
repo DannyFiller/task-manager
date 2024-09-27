@@ -76,13 +76,13 @@ class DatabaseService {
   }
 
   // Xóa công việc
-  Future<int> delete(String tieuDeCongViec) async {
+  Future<int> delete(int id) async {
     final db = await instance.database;
 
     return await db.delete(
       'CongViec',
-      where: 'tieuDeCongViec = ?',
-      whereArgs: [tieuDeCongViec],
+      where: 'id = ?',
+      whereArgs: [id],
     );
   }
 
