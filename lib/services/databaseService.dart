@@ -62,6 +62,18 @@ class DatabaseService {
     return result.map((json) => Congviec.fromMap(json)).toList();
   }
 
+  Future<List<Congviec>> readAllCongviecChuaHoanThanh() async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'CongViec',
+      where: 'trangThai = ?',
+      whereArgs: [0],
+    );
+
+    return result.map((json) => Congviec.fromMap(json)).toList();
+  }
+
   // Cập nhật công việc
   Future<int> update(Congviec congviec) async {
     final db = await instance.database;

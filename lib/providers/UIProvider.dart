@@ -28,7 +28,7 @@ class Uiprovider with ChangeNotifier {
       colorScheme: ColorScheme.dark(
         primary: Colors.grey[900]!, // Màu chính
         onPrimary: Colors.white, // Màu văn bản trên nền primary
-        background: Colors.black, // Màu nền chung
+        surfaceContainer: Colors.black, // Màu nền chung
         surface: Colors.grey[800]!, // Màu nền của các widget
       ),
 

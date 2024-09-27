@@ -35,7 +35,7 @@ class _DangNhapState extends State<DangNhap> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.blueAccent,
+          // color: Colors.blueAccent,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: Center(
@@ -51,7 +51,7 @@ class _DangNhapState extends State<DangNhap> {
                     child: const Text(
                       "Đăng Nhập",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 32),
                     ),
@@ -64,7 +64,7 @@ class _DangNhapState extends State<DangNhap> {
                         hintText: "Email",
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.timelapse_outlined),
+                        prefixIcon: Icon(Icons.email),
                         enabledBorder: OutlineInputBorder(
                             // borderSide: BorderSide.none,
                             ),
@@ -83,7 +83,7 @@ class _DangNhapState extends State<DangNhap> {
                         hintText: "Mật khấu",
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.timelapse_outlined),
+                        prefixIcon: Icon(Icons.password),
                         enabledBorder: OutlineInputBorder(
                             // borderSide: BorderSide.none,
                             ),
@@ -94,6 +94,9 @@ class _DangNhapState extends State<DangNhap> {
                     ),
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10)),
                     width: MediaQuery.of(context).size.width * 0.5,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: FilledButton(

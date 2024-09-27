@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
           Consumer<Uiprovider>(builder: (context, Uiprovider notifier, child) {
         return MaterialApp(
           // theo mặc định của máy
-          themeMode: notifier.isDark ? ThemeMode.dark : ThemeMode.light,
+          // themeMode: notifier.isDark ? ThemeMode.dark : ThemeMode.light,
           // theo cài chế độ sáng tốitối
           darkTheme: notifier.isDark ? notifier.darkTheme : notifier.lightTheme,
           debugShowCheckedModeBanner: false,

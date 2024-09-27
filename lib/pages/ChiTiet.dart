@@ -271,6 +271,7 @@ class _ChiTietState extends State<ChiTiet> {
               },
               borderRadius: BorderRadius.circular(20),
               child: Container(
+                color: Colors.white,
                 height: 60,
                 margin: const EdgeInsets.only(bottom: 16),
                 // width: MediaQuery.of(context).size.width * 0.9,

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/models/congViec.dart';
 import 'package:task_manager/pages/ChiTiet.dart';
+import 'package:task_manager/pages/danhSachTatCa.dart';
 import 'package:task_manager/pages/themcongviec.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/providers/ListVSM.dart';
@@ -19,6 +20,7 @@ class DanhSach extends StatefulWidget {
 
 class _DanhSachState extends State<DanhSach> {
   List<Congviec> lstCongViec = [];
+  List<Congviec> lstChuaHoanThanh = [];
   var logger = Logger();
 
   late Future<List<Congviec>> congViec;
@@ -33,21 +35,22 @@ class _DanhSachState extends State<DanhSach> {
 
   Future<List<Congviec>> _loadProData() async {
     lstCongViec = await DatabaseService.instance.readAllCongviec();
-    // lstCongViec = await Provider.of<ListVSM>(context, listen: false).LoadData();
+    lstChuaHoanThanh =
+        await DatabaseService.instance.readAllCongviecChuaHoanThanh();
+
     setState(() {
-      int b = lstCongViec.where((congViec) => congViec.trangThai!).length;
-      int a = lstCongViec.where((congViec) => !congViec.trangThai!).length;
+      int a = lstCongViec.where((congViec) => congViec.trangThai!).length;
+      int b = lstCongViec.where((congViec) => !congViec.trangThai!).length;
       setValue(a, b);
 
-      // lstCongViec = await Provider.of<ListVSM>(context, listen: false).LoadData();
       print(lstCongViec.length);
     });
     return lstCongViec;
   }
 
   Map<String, double> dataMap = {
-    "Công việc đã hoàn thành": 1,
     "Công việc chưa hoàn thành": 1,
+    "Công việc đã hoàn thành": 1,
   };
   void setValue(int a, int b) {
     dataMap["Công việc đã hoàn thành"] = a.toDouble();
@@ -68,7 +71,7 @@ class _DanhSachState extends State<DanhSach> {
         forceMaterialTransparency: true,
         automaticallyImplyLeading: false,
         title: const Text(
-          'Tình Trạng Công Việc',
+          'Thống Kê Công Việc',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -80,6 +83,7 @@ class _DanhSachState extends State<DanhSach> {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           children: [
+            const Divider(),
             Text(
               'Tổng Số Công Việc : ${lstCongViec.length}',
               style: const TextStyle(
@@ -109,44 +113,110 @@ class _DanhSachState extends State<DanhSach> {
                 showChartValuesOutside: false,
                 decimalPlaces: 1,
               ),
-              // gradientList: ---To add gradient colors---
-              // emptyColorGradient: ---Empty Color gradient---
+            ),
+            const Divider(),
+            InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DanhSachTatCa(),
+                    ));
+              },
+              child: Container(
+                height: 40,
+                // width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Danh sách tất cả các công việc",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
+                ),
+              ),
             ),
             const Divider(),
             const Text(
-              'Danh sách công việc',
+              'Danh sách công việc chưa làm',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<Congviec>>(
-                future: congViec,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Lỗi: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('Không có công việc nào.'));
-                  } else {
-                    lstCongViec = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: lstCongViec.length,
-                      itemBuilder: (context, index) {
-                        return item(context, index, lstCongViec);
+              child: ReorderableListView(
+                children: List.generate(
+                  lstChuaHoanThanh.length,
+                  (index) => Container(
+                    key: Key("$index"),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChiTiet(
+                                index: lstChuaHoanThanh.length,
+                                congviec: lstChuaHoanThanh[index],
+                                // congviec: lst[index],
+                              ),
+                            ));
                       },
-
-                      // itemCount: lstCongViec.length,
-                      // itemBuilder: (context, index) {
-                      //   return item(context, index, lstCongViec);
-                      // },
-                    );
-                  }
+                      title: Text(
+                        lstChuaHoanThanh[index].tieuDeCongViec.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        lstChuaHoanThanh[index].noiDung.toString(),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      leading: const Icon(Icons.work),
+                      trailing: Wrap(
+                        spacing: 6,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: GestureDetector(
+                              onTap: () {
+                                xoaCongViec(lstChuaHoanThanh[index].id!);
+                                // ShowDialog(context);
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                size: 32,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = lstChuaHoanThanh.removeAt(oldIndex);
+                    lstChuaHoanThanh.insert(newIndex, item);
+                  });
                 },
               ),
             ),
+            const Divider(),
           ],
         ),
       ),
@@ -198,15 +268,6 @@ class _DanhSachState extends State<DanhSach> {
             trailing: Wrap(
               spacing: 6,
               children: <Widget>[
-                // Checkbox(
-                //   value: lst[index].trangThai,
-                //   onChanged: (bool? newValue) {
-                //     if (newValue != null) {
-                //       lst[index].trangThai = newValue;
-                //       value.notifyListeners();
-                //     }
-                //   },
-                // ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: GestureDetector(
