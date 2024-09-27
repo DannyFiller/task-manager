@@ -36,85 +36,83 @@ class _DangNhapState extends State<DangNhap> {
       body: SafeArea(
         child: Container(
           color: Colors.blueAccent,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 16),
-                  child: Image.asset("${urlImage}logo.png"),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: const Text(
-                    "Đăng Nhập",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 16),
+                    child: Image.asset("${urlImage}logo.png"),
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  padding: const EdgeInsets.only(left: 10),
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 124, 121, 121)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      prefixIconColor: Colors.amber,
-                      prefixIcon: Icon(Icons.person),
-                      hintText: "Tên tài khoản",
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  padding: const EdgeInsets.only(left: 10),
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 124, 121, 121)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    obscureText: true,
-                    controller: matKhauController,
-                    decoration: const InputDecoration(
-                      prefixIconColor: Colors.amber,
-                      prefixIcon: Icon(Icons.password),
-                      hintText: "Mật Khẩu",
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: FilledButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      authservice.SignIn(
-                          email: emailController.text,
-                          password: matKhauController.text,
-                          context: context);
-                    },
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: const Text(
                       "Đăng Nhập",
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32),
                     ),
                   ),
-                )
-              ],
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        hintText: "Email",
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(Icons.timelapse_outlined),
+                        enabledBorder: OutlineInputBorder(
+                            // borderSide: BorderSide.none,
+                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      controller: matKhauController,
+                      decoration: const InputDecoration(
+                        hintText: "Mật khấu",
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(Icons.timelapse_outlined),
+                        enabledBorder: OutlineInputBorder(
+                            // borderSide: BorderSide.none,
+                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: FilledButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        authservice.SignIn(
+                            email: emailController.text,
+                            password: matKhauController.text,
+                            context: context);
+                      },
+                      child: const Text(
+                        "Đăng Nhập",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_manager/providers/UIProvider.dart';
 
 class Caidat extends StatefulWidget {
   const Caidat({super.key});
@@ -16,52 +18,76 @@ class _CaidatState extends State<Caidat> {
         title: const Text("Cài Đặt"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const ListTile(
-                leading: Icon(Icons.mode_night_outlined),
-                title: Text(
-                  "Cài đặt sáng tối",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+      body:
+          Consumer<Uiprovider>(builder: (context, Uiprovider notifier, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10)),
+                child: ListTile(
+                  leading: const Icon(Icons.mode_night_outlined),
+                  title: const Text(
+                    "Cài đặt sáng tối",
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                  ),
+                  trailing: Switch(
+                    value: notifier.isDark,
+                    onChanged: (value) => notifier.changeTheme,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const ListTile(
-                leading: Icon(Icons.mode_night_outlined),
-                title: Text(
-                  "Cài đặt kích cỡ chữ",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10)),
+                child: const ListTile(
+                  leading: Icon(Icons.font_download_outlined),
+                  title: Text(
+                    "Cài đặt kích cỡ chữ",
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const ListTile(
-                leading: Icon(Icons.mode_night_outlined),
-                title: Text(
-                  "Cài đặt màu chữ",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10)),
+                child: const ListTile(
+                  leading: Icon(Icons.colorize_outlined),
+                  title: Text(
+                    "Cài đặt màu chữ",
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const ListTile(
+                    leading: Icon(Icons.logout),
+                    title: Text(
+                      "Đăng xuất",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

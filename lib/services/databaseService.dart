@@ -70,8 +70,8 @@ class DatabaseService {
     return db.update(
       'CongViec',
       congviec.toMap(),
-      where: 'tieuDeCongViec = ?',
-      whereArgs: [congviec.tieuDeCongViec],
+      where: 'id = ?',
+      whereArgs: [congviec.id],
     );
   }
 

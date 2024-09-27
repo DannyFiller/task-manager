@@ -51,6 +51,7 @@ class _ChiTietState extends State<ChiTiet> {
     // TODO: implement initState
     super.initState();
     _tieuDeController.text = widget.congviec.tieuDeCongViec.toString();
+    logger.i(widget.congviec.tieuDeCongViec);
     _noiDungController.text = widget.congviec.noiDung.toString();
     _ghiChuController.text = widget.congviec.ghiChu.toString();
     _ngayLamController.text =
@@ -83,7 +84,7 @@ class _ChiTietState extends State<ChiTiet> {
       ghiChu: _ghiChuController.text,
     );
     Provider.of<ListVSM>(context, listen: false).capNhatCongViec(congviec);
-    logger.i(congviec.trangThai);
+    logger.i(congviec.tieuDeCongViec);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -180,16 +181,15 @@ class _ChiTietState extends State<ChiTiet> {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 4),
               alignment: Alignment.centerLeft,
-              child: TextField(
+              child: TextFormField(
                 controller: _tieuDeController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24),
                 decoration: const InputDecoration(
                   prefix: Text(
                     "Tiêu đề: ",
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   border: InputBorder.none,
                 ),
@@ -222,7 +222,8 @@ class _ChiTietState extends State<ChiTiet> {
                   maxLines: null,
                   controller: _noiDungController,
                   style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 24,
+                  ),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                   ),
