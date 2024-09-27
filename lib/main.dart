@@ -5,6 +5,7 @@ import 'package:task_manager/pages/DangNhap.dart';
 import 'package:task_manager/providers/ListVSM.dart';
 import 'package:task_manager/providers/UIProvider.dart';
 import 'package:task_manager/trangchu.dart';
+
 import 'package:task_manager/utilities/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class MainApp extends StatelessWidget {
         return const MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-            body: DangNhap(),
+            body: TrangChu(),
           ),
         );
       }),

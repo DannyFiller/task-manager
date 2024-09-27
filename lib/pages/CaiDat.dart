@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_manager/models/congViec.dart';
 import 'package:task_manager/providers/UIProvider.dart';
+
+import 'package:task_manager/services/databaseService.dart';
 
 class Caidat extends StatefulWidget {
   const Caidat({super.key});
@@ -10,6 +13,14 @@ class Caidat extends StatefulWidget {
 }
 
 class _CaidatState extends State<Caidat> {
+  List<Congviec> lstCongViec = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +48,7 @@ class _CaidatState extends State<Caidat> {
                   ),
                   trailing: Switch(
                     value: notifier.isDark,
-                    onChanged: (value) => notifier.changeTheme,
+                    onChanged: (value) => notifier.changeTheme(),
                   ),
                 ),
               ),

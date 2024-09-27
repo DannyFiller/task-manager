@@ -85,7 +85,7 @@ class _ChiTietState extends State<ChiTiet> {
     );
     Provider.of<ListVSM>(context, listen: false).capNhatCongViec(congviec);
     logger.i(congviec.tieuDeCongViec);
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const TrangChu(),

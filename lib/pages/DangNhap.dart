@@ -110,7 +110,7 @@ class _DangNhapState extends State<DangNhap> {
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

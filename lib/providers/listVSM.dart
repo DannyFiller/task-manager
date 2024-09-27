@@ -4,8 +4,14 @@ import 'package:logger/logger.dart';
 import 'package:task_manager/services/databaseService.dart';
 
 class ListVSM with ChangeNotifier {
-  List<Congviec> danhsach = [];
   var logger = Logger();
+  List<Congviec> danhsach = [];
+  Future LoadData() async {
+    danhsach = await DatabaseService.instance.readAllCongviec();
+    logger.i(danhsach.length);
+    notifyListeners();
+  }
+
   Future themCongViec(Congviec congViec) async {
     logger.i("Cong viec : ${congViec.tieuDeCongViec}");
     danhsach.add(congViec);
