@@ -4,8 +4,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:task_manager/pages/DangNhap.dart';
 import 'package:task_manager/providers/ListVSM.dart';
 import 'package:task_manager/providers/UIProvider.dart';
-import 'package:task_manager/trangchu.dart';
-
 import 'package:task_manager/utilities/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -28,10 +26,14 @@ class MainApp extends StatelessWidget {
       ],
       child:
           Consumer<Uiprovider>(builder: (context, Uiprovider notifier, child) {
-        return const MaterialApp(
+        return MaterialApp(
+          // theo mặc định của máy
+          themeMode: notifier.isDark ? ThemeMode.dark : ThemeMode.light,
+          // theo cài chế độ sáng tốitối
+          darkTheme: notifier.isDark ? notifier.darkTheme : notifier.lightTheme,
           debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            body: TrangChu(),
+          home: const Scaffold(
+            body: DangNhap(),
           ),
         );
       }),

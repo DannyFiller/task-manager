@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:task_manager/models/congViec.dart';
 import 'dart:io';
-import 'package:logger/logger.dart';
 
 class DatabaseService {
   static final DatabaseService instance = DatabaseService._init();

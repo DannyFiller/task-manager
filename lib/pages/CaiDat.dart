@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/models/congViec.dart';
+import 'package:task_manager/pages/DangNhap.dart';
 import 'package:task_manager/providers/UIProvider.dart';
-
-import 'package:task_manager/services/databaseService.dart';
 
 class Caidat extends StatefulWidget {
   const Caidat({super.key});
@@ -17,8 +16,16 @@ class _CaidatState extends State<Caidat> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+  }
+
+  void logOut() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DangNhap(),
+      ),
+    );
   }
 
   @override
@@ -79,7 +86,13 @@ class _CaidatState extends State<Caidat> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DangNhap(),
+                      ));
+                },
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(

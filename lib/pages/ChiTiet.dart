@@ -72,6 +72,39 @@ class _ChiTietState extends State<ChiTiet> {
     _thoiGianController.text = widget.congviec.thoiGianLamViec!.format(context);
   }
 
+  void _showTimePicker() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then((value) {
+      setState(() {
+        if (value != null) {
+          setState(() {
+            widget.congviec.thoiGianLamViec = value;
+            _thoiGianController.text =
+                widget.congviec.thoiGianLamViec!.format(context);
+            ;
+          });
+        }
+      });
+    });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _ngayLamController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+        logger.i(_ngayLamController.text);
+      });
+    }
+  }
+
   void capNhat() {
     Congviec congviec = Congviec(
       id: widget.congviec.id,
@@ -105,6 +138,7 @@ class _ChiTietState extends State<ChiTiet> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: TextFormField(
+                onTap: () => _selectDate(context),
                 controller: _ngayLamController,
                 decoration: const InputDecoration(
                   label: Text("Ngày làm việc"),
@@ -122,6 +156,7 @@ class _ChiTietState extends State<ChiTiet> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: TextFormField(
+                onTap: () => _showTimePicker(),
                 controller: _thoiGianController,
                 decoration: const InputDecoration(
                   label: Text("Thời gian làm việc"),
@@ -179,7 +214,7 @@ class _ChiTietState extends State<ChiTiet> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
               alignment: Alignment.centerLeft,
               child: TextFormField(
                 controller: _tieuDeController,
@@ -197,7 +232,7 @@ class _ChiTietState extends State<ChiTiet> {
             ),
             const Divider(),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
               alignment: Alignment.centerLeft,
               child: TextFormField(
                 controller: _ghiChuController,
@@ -216,7 +251,7 @@ class _ChiTietState extends State<ChiTiet> {
             const Divider(),
             Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 4),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
                 child: TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,

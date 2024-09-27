@@ -77,6 +77,7 @@ class _DangNhapState extends State<DangNhap> {
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
+                      obscureText: true,
                       controller: matKhauController,
                       decoration: const InputDecoration(
                         hintText: "Mật khấu",

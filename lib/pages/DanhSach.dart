@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/providers/ListVSM.dart';
 import 'package:task_manager/services/databaseService.dart';
 import 'package:logger/logger.dart';
-import 'package:task_manager/trangchu.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class DanhSach extends StatefulWidget {
@@ -36,8 +35,8 @@ class _DanhSachState extends State<DanhSach> {
     lstCongViec = await DatabaseService.instance.readAllCongviec();
     // lstCongViec = await Provider.of<ListVSM>(context, listen: false).LoadData();
     setState(() {
-      int a = lstCongViec.where((congViec) => congViec.trangThai!).length;
-      int b = lstCongViec.where((congViec) => !congViec.trangThai!).length;
+      int b = lstCongViec.where((congViec) => congViec.trangThai!).length;
+      int a = lstCongViec.where((congViec) => !congViec.trangThai!).length;
       setValue(a, b);
 
       // lstCongViec = await Provider.of<ListVSM>(context, listen: false).LoadData();
@@ -55,12 +54,19 @@ class _DanhSachState extends State<DanhSach> {
     dataMap["Công việc chưa hoàn thành"] = b.toDouble();
   }
 
+  void xoaCongViec(int id) {
+    Provider.of<ListVSM>(context, listen: false).xoaCongViec(id);
+    setState(() {
+      congViec = _loadProData(); // Gọi lại dữ liệu mới
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
-        // automaticallyImplyLe/ading: false,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Tình Trạng Công Việc',
           style: TextStyle(
@@ -71,18 +77,18 @@ class _DanhSachState extends State<DanhSach> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           children: [
             Text(
               'Tổng Số Công Việc : ${lstCongViec.length}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
             PieChart(
               dataMap: dataMap,
-              animationDuration: Duration(milliseconds: 800),
+              animationDuration: const Duration(milliseconds: 800),
               chartLegendSpacing: 32,
               chartRadius: MediaQuery.of(context).size.width / 3.2,
               initialAngleInDegree: 0,
@@ -106,7 +112,7 @@ class _DanhSachState extends State<DanhSach> {
               // gradientList: ---To add gradient colors---
               // emptyColorGradient: ---Empty Color gradient---
             ),
-            Divider(),
+            const Divider(),
             const Text(
               'Danh sách công việc',
               style: TextStyle(
@@ -156,108 +162,108 @@ class _DanhSachState extends State<DanhSach> {
       ),
     );
   }
-}
 
-Widget item(BuildContext context, int index, List<Congviec> lst) {
-  return Consumer<ListVSM>(
-    builder: (BuildContext context, ListVSM value, Widget? child) {
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10)),
-        child: ListTile(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChiTiet(
-                    index: lst.length,
-                    congviec: lst[index],
-                    // congviec: lst[index],
-                  ),
-                ));
-          },
-          title: Text(
-            lst[index].tieuDeCongViec.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            lst[index].noiDung.toString(),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-          leading: const Icon(Icons.work),
-          trailing: Wrap(
-            spacing: 6,
-            children: <Widget>[
-              // Checkbox(
-              //   value: lst[index].trangThai,
-              //   onChanged: (bool? newValue) {
-              //     if (newValue != null) {
-              //       lst[index].trangThai = newValue;
-              //       value.notifyListeners();
-              //     }
-              //   },
-              // ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: GestureDetector(
-                  onTap: () {
-                    value.xoaCongViec(lst[index].id!);
-                    // ShowDialog(context);
-                  },
-                  child: const Icon(
-                    Icons.delete,
-                    size: 32,
+  Widget item(BuildContext context, int index, List<Congviec> lst) {
+    return Consumer<ListVSM>(
+      builder: (BuildContext context, ListVSM value, Widget? child) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChiTiet(
+                      index: lst.length,
+                      congviec: lst[index],
+                      // congviec: lst[index],
+                    ),
+                  ));
+            },
+            title: Text(
+              lst[index].tieuDeCongViec.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              lst[index].noiDung.toString(),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            leading: const Icon(Icons.work),
+            trailing: Wrap(
+              spacing: 6,
+              children: <Widget>[
+                // Checkbox(
+                //   value: lst[index].trangThai,
+                //   onChanged: (bool? newValue) {
+                //     if (newValue != null) {
+                //       lst[index].trangThai = newValue;
+                //       value.notifyListeners();
+                //     }
+                //   },
+                // ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: GestureDetector(
+                    onTap: () {
+                      xoaCongViec(lst[index].id!);
+                      // ShowDialog(context);
+                    },
+                    child: const Icon(
+                      Icons.delete,
+                      size: 32,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-void ShowDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        child: SizedBox(
-          height: 200,
-          width: MediaQuery.of(context).size.height * 0.5,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Đã Xóa",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: FilledButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    "Tiếp tục",
-                    style: TextStyle(color: Colors.black),
-                  ),
+  void ShowDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: SizedBox(
+            height: 200,
+            width: MediaQuery.of(context).size.height * 0.5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Đã Xóa",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-              )
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: FilledButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "Tiếp tục",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
