@@ -33,7 +33,13 @@ class _CaidatState extends State<Caidat> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Cài Đặt"),
+        title: const Text(
+          "Cài Đặt",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
       ),
       body:

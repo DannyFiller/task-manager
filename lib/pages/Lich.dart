@@ -42,7 +42,13 @@ class _LichState extends State<Lich> {
       appBar: AppBar(
         forceMaterialTransparency: true,
         automaticallyImplyLeading: false,
-        title: const Text("Lịch Công Việc"),
+        title: const Text(
+          "Lịch Công Việc",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
